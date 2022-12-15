@@ -1,0 +1,22 @@
+{
+    "name": "PowerButton",
+    "version": "1.0.0",
+    "description": "A button manager library that handles debounce, multipress combinations and callbacks",
+    "keywords": "esp32, button, iot",
+    "repository":
+    {
+      "type": "git",
+      "url": "https://github.com/Nspnosa/powerbutton"
+    },
+    "authors":
+    [
+      {
+        "name": "Natanael Espinosa",
+        "email": "natanael.espinosa@gmail.com"
+      }
+    ],
+    "license": "MIT",
+    "homepage": "https://github.com/Nspnosa/powerbutton",
+    "frameworks": "arduino",
+    "platforms": "esp32"
+  }
