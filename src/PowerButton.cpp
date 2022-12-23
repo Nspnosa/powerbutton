@@ -145,6 +145,7 @@ void PowerButton::pinRun(void) {
   }
 
   if (_buttonPrevState == 2 && pinValue == _releasedState) {
+    _pressed = true;
     return; //do nothing if first time we get a released state 
   }
 
@@ -162,7 +163,7 @@ void PowerButton::pinRun(void) {
 
     _debounceRunning = true;
     if (pinValue == _releasedState) { 
-      
+      _pressed = false;
       if (_currentEventIndex < POWER_BUTTON_EVENT_MAX_SIZE) {
         portENTER_CRITICAL_ISR(&_buttonMux);
         if (timeDifference >= _longPressTime) {
@@ -178,13 +179,40 @@ void PowerButton::pinRun(void) {
       _actionTimerValue = 0;
       _timerAlreadyRunning = true;
       portEXIT_CRITICAL_ISR(&_buttonMux);
+      if (_onReleaseImmediateCb != NULL) {
+        _onReleaseImmediateCb();
+      }
     }    
     else {
+      _pressed = true;
       portENTER_CRITICAL_ISR(&_buttonMux);
       _timerAlreadyRunning = false;
       portEXIT_CRITICAL_ISR(&_buttonMux);
+      if (_onPressImmediateCb != NULL) {
+        _onPressImmediateCb();
+      }
     }
   }
   _buttonPrevState = pinValue;
   _buttonPrevTime = currentTime;
+}
+
+void PowerButton::attachOnPressImmediate(void (*callback)(void)) {
+  _onPressImmediateCb = callback;
+}
+
+void PowerButton::removeOnReleaseImmediate(void) {
+  _onPressImmediateCb = NULL;
+}
+
+void PowerButton::attachOnReleaseImmediate(void (*callback)(void)) {
+  _onReleaseImmediateCb = callback;
+}
+
+void PowerButton::removeOnPressImmediate(void) {
+  _onReleaseImmediateCb = NULL;
+}
+
+bool PowerButton::pressed(void) {
+  return _pressed;
 }

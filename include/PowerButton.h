@@ -39,6 +39,12 @@ class PowerButton {
     void pinRun(void);
     static void timerRun(uint8_t timeIncreaseMs = 1);
 
+    void attachOnPressImmediate(void (*callback)(void));
+    void attachOnReleaseImmediate(void (*callback)(void));
+    void removeOnPressImmediate(void);
+    void removeOnReleaseImmediate(void);
+    bool pressed(void);
+    void attachOnPressInmediate(void);
     typedef struct {
       PowerButtonEvent_t dataArray[POWER_BUTTON_EVENT_MAX_SIZE];
       uint8_t dataArraySize = 0;
@@ -72,4 +78,8 @@ class PowerButton {
     uint32_t _longPressTime;
     bool _debounceRunning = false;
     uint32_t _debounceTimeout;
+
+    void (*_onPressImmediateCb)(void) = NULL;
+    void (*_onReleaseImmediateCb)(void) = NULL;
+    bool _pressed = false;
 };
